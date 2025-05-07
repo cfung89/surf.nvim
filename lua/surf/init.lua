@@ -3,7 +3,9 @@ local config = require("surf.config")
 local M = {}
 
 M.setup = function(opts)
-	opts = vim.tbl_deep_extend("force", config.defaults, opts or {})
+	config.set(opts)
+
+	vim.api.nvim_create_user_command(config.defaults.cmd, require("surf.ui").toggle_window, {})
 end
 
 return M
