@@ -3,6 +3,8 @@ local M = {}
 M.defaults = {
 	keymaps = {},
 	cmd = "Surf",
+	default_engine = "",
+	bangs = { ["hi"] = "world" }
 }
 
 ---@param opts table
