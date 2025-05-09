@@ -20,7 +20,7 @@ M.load_text_file = function(path)
 	local lines = {}
 	for l in io.lines(path) do
 		local line = l:match("^%s*(.-)%s*$")
-		table.insert(lines, line)
+		table.insert(lines, 1, line)
 	end
 	return true, lines
 end
@@ -50,8 +50,8 @@ end
 M.write_text_file = function(path, data)
 	local f = io.open(path, "w")
 	if not f then return false end
-	for _, n in ipairs(data) do
-		f:write(n)
+	for i = #data, 1, -1 do
+		f:write(data[i] .. "\n")
 	end
 	f:close()
 	return true
