@@ -2,25 +2,31 @@ local actions = require("telescope.actions")
 local action_state = require("telescope.actions.state")
 local finders = require("telescope.finders")
 local pickers = require("telescope.pickers")
-local config = require("telescope.config").values
+local conf = require("telescope.config").values
+
+local config = require("surf.config")
 
 local M = {}
 
----@param opts table
+---@param opts table | nil --opts for picker
 ---@param results string[]
 ---@param action_fct function
 M.custom_picker = function(opts, results, action_fct)
+	opts = opts or {}
+	local finder = finders.new_table({ results = results, })
 	pickers.new(opts, {
 		prompt_title = "Surf",
-		finder = finders.new_table({
-			results = results,
-		}),
-		sorter = config.generic_sorter(opts),
+		finder = finder,
+		sorter = conf.generic_sorter(opts),
 		attach_mappings = function(prompt_bufnr, map)
-			map("i", "<C-y>", function() end)
+			map("n", config.opts.keymaps.search, function() actions.close(prompt_bufnr) end)
+			for _, key in ipairs(config.opts.picker_mappings) do
+				map(key[1], key[2], function() key[3](prompt_bufnr, map, actions, action_state) end)
+			end
+
 			actions.select_default:replace(function()
-				local prompt = action_state.get_current_line()
 				local selection = action_state.get_selected_entry()
+				local prompt = action_state.get_current_line()
 				actions.close(prompt_bufnr)
 				if action_fct then
 					local mode = vim.api.nvim_get_mode().mode

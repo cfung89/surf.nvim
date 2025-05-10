@@ -36,15 +36,6 @@ M.load_json_file = function(path)
 end
 
 ---@param path string
----@return boolean
-M.clear_search_history = function(path)
-	local f = io.open(path, "w")
-	if not f then return false end
-	f:close()
-	return true
-end
-
----@param path string
 ---@param data string[]
 ---@return boolean
 M.write_text_file = function(path, data)
@@ -58,18 +49,6 @@ M.write_text_file = function(path, data)
 end
 
 ---@param path string
----@param data string
----@return boolean
-M.append_text_file = function(path, data)
-	local f = io.open(path, "a")
-	if not f then return false end
-	local nl = data .. "\n"
-	f:write(nl)
-	f:close()
-	return true
-end
-
----@param path string
 ---@param data table
 ---@return boolean
 M.write_json_file = function(path, data)
@@ -78,15 +57,6 @@ M.write_json_file = function(path, data)
 	f:write(vim.fn.json_encode(data))
 	f:close()
 	return true
-end
-
----@param arr table
----@return table
-M.reverse_array = function(arr)
-	for i = 1, math.floor(#arr / 2) do
-		arr[i], arr[#arr - i + 1] = arr[#arr - i + 1], arr[i]
-	end
-	return arr
 end
 
 return M

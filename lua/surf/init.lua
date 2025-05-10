@@ -4,10 +4,6 @@ local search = require("surf.search")
 
 local M = {}
 
-local on_exit = function()
-	utils.write_text_file(utils.search_history_path, search.search_history)
-end
-
 ---@param opts table | nil
 M.setup = function(opts)
 	config.set(opts)
@@ -28,14 +24,14 @@ M.setup = function(opts)
 
 	if config.opts.commands.clear_history then
 		vim.api.nvim_create_user_command(config.opts.commands.clear_history,
-			function() utils.clear_search_history(utils.search_history_path) end
-			, {})
+			function() search.search_history = {} end, {})
 	end
 
 	vim.api.nvim_create_autocmd("VimLeavePre", {
-		callback = on_exit
+		callback = function()
+			utils.write_text_file(utils.search_history_path, search.search_history)
+		end
 	})
 end
-utils.clear_search_history(utils.search_history_path)
 
 return M

@@ -1,5 +1,5 @@
+local config = require("surf.config")
 local ui = require("surf.ui")
-local utils = require("surf.utils")
 
 local M = {}
 
@@ -14,9 +14,12 @@ end
 
 ---@param prompt string
 M.browse = function(prompt)
-	table.insert(M.search_history, 1, prompt)
-	local query = prompt:gsub(" ", "+")
-	vim.ui.open(string.format("https://search.brave.com/search?q=%s&source=desktop", query))
+	local p = prompt:match("^%s*(.-)%s*$")
+	if p ~= "" then
+		table.insert(M.search_history, 1, p)
+	end
+	local query = p:gsub(" ", "+")
+	vim.ui.open(string.format(config.get_default_search_link(), query))
 end
 
 return M
