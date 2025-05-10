@@ -1,12 +1,10 @@
+local utils = require("surf.utils")
+
 local M = {}
 
 M.defaults = {
 	keymaps = {
 		search = "<leader>o",
-	},
-	commands = {
-		search = "Surf",
-		clear_history = "SurfClear",
 	},
 	search_history_limit = 500,
 	default_engine = "Google",
@@ -52,6 +50,8 @@ M.set = function(opts)
 		assert(type(key[2]) == "string", "Assertion Error: Invalid key for picker_mappings, is not a string.")
 		assert(type(key[3]) == "function", "Assertion Error: Invalid key for picker_mappings, is not a function.")
 	end
+
+	M.os = utils.get_os_name()
 end
 
 M.get_default_search_link = function()

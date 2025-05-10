@@ -6,6 +6,9 @@ local M = {}
 
 ---@param opts table | nil
 M.setup = function(opts)
+	local found, _ = pcall(require, "telescope")
+	assert(found, "Assertion Error: Telescope not found.")
+
 	config.set(opts)
 
 	local ok, history = utils.load_text_file(utils.search_history_path)
@@ -18,18 +21,12 @@ M.setup = function(opts)
 		vim.keymap.set("n", config.opts.keymaps.search, require("surf.search").surf_search)
 	end
 
-	if config.opts.commands.search then
-		vim.api.nvim_create_user_command(config.opts.commands.search, require("surf.search").surf_search, {})
-	end
-
-	if config.opts.commands.clear_history then
-		vim.api.nvim_create_user_command(config.opts.commands.clear_history,
-			function() search.search_history = {} end, {})
-	end
+	vim.api.nvim_create_user_command("Surf", require("surf.search").surf_search, {})
+	vim.api.nvim_create_user_command("SurfClear", function() search.search_history = {} end, {})
 
 	vim.api.nvim_create_autocmd("VimLeavePre", {
 		callback = function()
-			utils.write_text_file(utils.search_history_path, search.search_history)
+			utils.write_text_file(utils.search_history_path, search.search_history, config.opts.search_history_limit)
 		end
 	})
 end

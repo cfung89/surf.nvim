@@ -30,7 +30,7 @@ M.custom_picker = function(opts, results, action_fct)
 				actions.close(prompt_bufnr)
 				if action_fct then
 					local mode = vim.api.nvim_get_mode().mode
-					if selection ~= nil and (mode == "n" or selection.index > 1) then
+					if selection ~= nil and (mode == "n" or selection.index > 1 or (mode == "i" and selection.index == 1)) then
 						action_fct(selection[1])
 					elseif mode == "i" then
 						action_fct(prompt)

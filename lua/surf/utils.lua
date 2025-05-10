@@ -5,6 +5,8 @@ M.search_history_path = M.data_path .. "/search_history.txt"
 
 vim.fn.mkdir(M.data_path, "p")
 
+M.unpack = unpack or table.unpack
+
 ---@param path string
 ---@return boolean
 M.file_exists = function(path)
@@ -19,7 +21,7 @@ M.load_text_file = function(path)
 	if not M.file_exists(path) then return false, {} end
 	local lines = {}
 	for l in io.lines(path) do
-		local line = l:match("^%s*(.-)%s*$")
+		local line = vim.fn.trim(l)
 		table.insert(lines, 1, line)
 	end
 	return true, lines
@@ -37,11 +39,14 @@ end
 
 ---@param path string
 ---@param data string[]
+---@param limit integer | nil
 ---@return boolean
-M.write_text_file = function(path, data)
+M.write_text_file = function(path, data, limit)
 	local f = io.open(path, "w")
 	if not f then return false end
-	for i = #data, 1, -1 do
+	local len = #data
+	if limit ~= nil and limit < len then len = limit end
+	for i = len, 1, -1 do
 		f:write(data[i] .. "\n")
 	end
 	f:close()
@@ -57,6 +62,30 @@ M.write_json_file = function(path, data)
 	f:write(vim.fn.json_encode(data))
 	f:close()
 	return true
+end
+
+---@param array string[]
+---@param value string
+---@return boolean
+M.array_contains = function(array, value)
+	for _, n in ipairs(array) do
+		if n == value then
+			return true
+		end
+	end
+	return false
+end
+
+---Copyright (c) 2022 Lalit Kumar
+---Source: https://github.com/lalitmee/browse.nvim/tree/main
+---License: MIT (see LICENSE file)
+---@return string
+M.get_os_name = function()
+	if string.find(vim.fn.systemlist("uname -r")[1] or "", "WSL") ~= nil then
+		return "WSL"
+	else
+		return vim.loop.os_uname().sysname
+	end
 end
 
 return M
