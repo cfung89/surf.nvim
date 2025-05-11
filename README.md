@@ -9,8 +9,6 @@
 - Fuzzyfinding through search history.
 - Cross-platform compatibility.
 
-And more upcoming features...
-
 ## Installation
 
 #### [lazy.nvim](https://github.com/folke/lazy.nvim)
@@ -18,6 +16,7 @@ And more upcoming features...
 ```lua
 {
   "cfung89/surf.nvim",
+  dependencies = { "nvim-telescope/telescope.nvim" }
   config = function()
     require("surf").setup()  -- For default options
   end
