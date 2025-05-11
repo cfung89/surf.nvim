@@ -1,11 +1,12 @@
 # TODO
 
-- [ ] Browsing
+- [X] Browsing
   - [X] Various search engines
   - [X] Browsing history
   - [X] UI
-  - [ ] Bangs
-  - [ ] User configuration
+  - [X] Bangs
+  - [X] User configuration
+  - [X] Documentation
 - [ ] Calculator
 - [ ] Bookmarks
   - Menu vs. table UI
@@ -13,7 +14,7 @@
   - [ ] User configuration
 - [ ] Specific integrations
   - [ ] cht.sh
-- [ ] Compatibility
+- [X] Compatibility
   - [X] Linux compatible
   - [X] WSL compatible
   - [X] Mac compatible (untested)

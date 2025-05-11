@@ -8,6 +8,8 @@ local config = require("surf.config")
 
 local M = {}
 
+M.last_prompt_bufnr = -1
+
 ---@param opts table | nil --opts for picker
 ---@param results string[]
 ---@param action_fct function
@@ -19,10 +21,30 @@ M.custom_picker = function(opts, results, action_fct)
 		finder = finder,
 		sorter = conf.generic_sorter(opts),
 		attach_mappings = function(prompt_bufnr, map)
-			map("n", config.opts.keymaps.search, function() actions.close(prompt_bufnr) end)
+			M.last_prompt_bufnr = prompt_bufnr
 			for _, key in ipairs(config.opts.picker_mappings) do
 				map(key[1], key[2], function() key[3](prompt_bufnr, map, actions, action_state) end)
 			end
+			-- map("i", "!", function()
+			-- 	local picker = action_state.get_current_picker(prompt_bufnr)
+			-- 	action_state.get_current_picker(prompt_bufnr):set_prompt("!")
+			-- 	local line = action_state.get_current_line()
+			-- 	if #line ~= 0 then return end
+			-- 	picker:refresh(
+			-- 		finders.new_table({
+			-- 			results = config.bangs_array,
+			-- 			entry_maker = function(entry)
+			-- 				return {
+			-- 					value = entry,
+			-- 					ordinal = entry,
+			-- 					display = entry .. " | " .. config.bangs[entry]
+			-- 				}
+			-- 			end
+			-- 		}),
+			-- 		{
+			-- 			callback = function() picker:refresh(finder) end
+			-- 		})
+			-- end)
 
 			actions.select_default:replace(function()
 				local selection = action_state.get_selected_entry()

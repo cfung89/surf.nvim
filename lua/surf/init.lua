@@ -18,10 +18,10 @@ M.setup = function(opts)
 	search.search_history = history
 
 	if config.opts.keymaps.search then
-		vim.keymap.set("n", config.opts.keymaps.search, require("surf.search").surf_search)
+		vim.keymap.set("n", config.opts.keymaps.search, require("surf.search").surf_toggle)
 	end
 
-	vim.api.nvim_create_user_command("Surf", require("surf.search").surf_search, {})
+	vim.api.nvim_create_user_command("Surf", require("surf.search").surf_toggle, {})
 	vim.api.nvim_create_user_command("SurfClear", function() search.search_history = {} end, {})
 
 	vim.api.nvim_create_autocmd("VimLeavePre", {

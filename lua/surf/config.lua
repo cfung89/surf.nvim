@@ -6,15 +6,33 @@ M.defaults = {
 	keymaps = {
 		search = "<leader>o",
 	},
+
 	search_history_limit = 500,
 	default_engine = "Google",
+
 	engines = {
-		["Brave"] = "https://search.brave.com/search?q=%s&source=desktop",
-		["Google"] = "https://www.google.com/search?q=%s",
-		["DuckDuckGo"] = "https://duckduckgo.com/?q=%s&ia=web",
-		["Bing"] = "https://www.bing.com/search?q=%s",
+		Google = {
+			bang = "!g",
+			url = "https://www.google.com/search?q=%s",
+		},
+		Brave = {
+			bang = "!br",
+			url = "https://search.brave.com/search?q=%s&source=desktop",
+		},
+		DuckDuckGo = {
+			bang = "!ddg",
+			url = "https://duckduckgo.com/?q=%s&ia=web",
+		},
+		Bing = {
+			bang = "!b",
+			url = "https://www.bing.com/search?q=%s",
+		},
+		Youtube = {
+			bang = "!yt",
+			url = "https://www.youtube.com/results?search_query=%s",
+		},
 	},
-	bangs = { ["g"] = "" },
+
 	picker_mappings = {
 		-- { "mode", "keymap", function(prompt_bufnr, map, actions, action_state) }
 		{
@@ -38,6 +56,11 @@ M.defaults = {
 	},
 }
 
+M.opts = {}
+M.engines = {}
+M.bangs = {}
+M.bangs_array = {}
+
 ---@param opts table | nil
 M.set = function(opts)
 	opts = opts or {}
@@ -51,11 +74,25 @@ M.set = function(opts)
 		assert(type(key[3]) == "function", "Assertion Error: Invalid key for picker_mappings, is not a function.")
 	end
 
+	M.set_engines()
 	M.os = utils.get_os_name()
 end
 
 M.get_default_search_link = function()
-	return M.opts.engines[M.opts.default_engine]
+	return M.bangs[M.engines[M.opts.default_engine]]
+end
+
+M.set_engines = function()
+	for name, props in pairs(M.opts.engines) do
+		assert(type(name) == "string", "Assertion Error: Invalid key type, not a string.")
+		assert(type(props.bang) == "string" and props.bang:sub(1, 1) == "!",
+			"Assertion Error: Invalid value of bang for '" .. name .. "', is not a string.")
+		assert(type(props.url) == "string", "Assertion Error: Invalid value of url '" .. name .. "', is not a string.")
+		assert(string.find(props.url, "%%s"), "Assertion Error: Invalid url for '" .. name .. "', no '%s' in the link.")
+		M.engines[name] = props.bang
+		M.bangs[props.bang] = props.url
+		table.insert(M.bangs_array, props.bang)
+	end
 end
 
 return M
