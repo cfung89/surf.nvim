@@ -19,13 +19,23 @@ M.browse = function(prompt)
 	if prompt ~= "" and not utils.array_contains(M.search_history, prompt) then
 		table.insert(M.search_history, 1, prompt)
 	end
-	local query = prompt:gsub(" ", "+")
+	local url, q = M.parse_bang(prompt)
+	local query = q:gsub(" ", "+")
 
-	M.open_url(string.format(M.parse_bang(), query))
+	M.open_url(string.format(url, query))
 end
 
-M.parse_bang = function()
-	return config.get_default_search_link()
+---comment
+---@param prompt string
+---@return string
+---@return string
+M.parse_bang = function(prompt)
+	-- local t = utils.string_split(prompt, " ")
+	-- if t[1]:sub(1, 1) == "!" then
+	-- 	config.opts.bangs[t[1]:sub(2)]
+	-- 	return config.opts.engines[config.opts.bangs[t[1]:sub(2)]]
+	-- end
+	return config.get_default_search_link(), prompt
 end
 
 ---@param url string

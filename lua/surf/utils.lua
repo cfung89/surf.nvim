@@ -76,6 +76,17 @@ M.array_contains = function(array, value)
 	return false
 end
 
+M.string_split = function(str, sep)
+	if sep == nil then
+		sep = "%s"
+	end
+	local t = {}
+	for s in string.gmatch(str, "([^" .. sep .. "]+)") do
+		table.insert(t, s)
+	end
+	return t
+end
+
 ---Copyright (c) 2022 Lalit Kumar
 ---Source: https://github.com/lalitmee/browse.nvim/tree/main
 ---License: MIT (see LICENSE file)

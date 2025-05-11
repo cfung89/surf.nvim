@@ -14,7 +14,7 @@ M.defaults = {
 		["DuckDuckGo"] = "https://duckduckgo.com/?q=%s&ia=web",
 		["Bing"] = "https://www.bing.com/search?q=%s",
 	},
-	bangs = {},
+	bangs = { ["g"] = "" },
 	picker_mappings = {
 		-- { "mode", "keymap", function(prompt_bufnr, map, actions, action_state) }
 		{
