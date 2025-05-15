@@ -1,5 +1,6 @@
 local actions = require("telescope.actions")
 
+local calculator = require("surf.calculator.calculator")
 local config = require("surf.config")
 local ui = require("surf.ui")
 local utils = require("surf.utils")
@@ -7,10 +8,11 @@ local utils = require("surf.utils")
 local M = {}
 
 M.search_history = {}
+M.calculator_history = {}
 
 M.surf_on = false
 
----@param opts table | nil --opts for custom picker
+---@param opts table? --opts for custom picker
 M.surf_toggle = function(opts)
 	opts = opts or {}
 	if M.surf_on then
@@ -22,7 +24,7 @@ M.surf_toggle = function(opts)
 		end
 	end
 	M.surf_on = true
-	ui.custom_picker(opts, M.search_history, M.browse)
+	ui.custom_picker(opts, M.search_history, M.browse, M.calculator_history, M.calculate)
 end
 
 ---@param prompt string
@@ -38,10 +40,22 @@ M.browse = function(prompt)
 end
 
 ---@param prompt string
+---@return number?
+M.calculate = function(prompt)
+	local tokens = calculator.parse_equation(prompt)
+	if not tokens then return end
+	local equation = "= " .. table.concat(tokens, " ")
+	if equation ~= "" and not utils.array_contains(M.calculator_history, equation) then
+		table.insert(M.calculator_history, 1, equation)
+	end
+	return calculator.postfix_eval(calculator.infix_to_postfix(tokens))
+end
+
+---@param prompt string
 ---@return string
 ---@return string
 M.parse_bang = function(prompt)
-	local t = utils.string_split(prompt, " ")
+	local t = utils.split_string(prompt, " ")
 	if t[1]:sub(1, 1) ~= "!" then
 		return config.get_default_search_link(), prompt
 	end

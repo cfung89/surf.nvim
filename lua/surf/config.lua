@@ -7,7 +7,7 @@ M.defaults = {
 		search = "<leader>o",
 	},
 
-	search_history_limit = 500,
+	history_limit = 500,
 	default_engine = "Google",
 
 	engines = {
@@ -40,7 +40,11 @@ M.defaults = {
 			function(prompt_bufnr, _, _, action_state)
 				local selection = action_state.get_selected_entry()
 				if not selection then return end
-				action_state.get_current_picker(prompt_bufnr):set_prompt(selection[1])
+				if selection.value then
+					action_state.get_current_picker(prompt_bufnr):set_prompt(selection.value .. " ")
+				else
+					action_state.get_current_picker(prompt_bufnr):set_prompt(selection[1])
+				end
 			end
 		},
 		{
@@ -48,7 +52,11 @@ M.defaults = {
 			function(prompt_bufnr, _, _, action_state)
 				local selection = action_state.get_selected_entry()
 				if not selection then return end
-				action_state.get_current_picker(prompt_bufnr):set_prompt(selection[1])
+				if selection.value then
+					action_state.get_current_picker(prompt_bufnr):set_prompt(selection.value .. " ")
+				else
+					action_state.get_current_picker(prompt_bufnr):set_prompt(selection[1])
+				end
 			end
 		},
 		{ "i", "<C-c>", function(prompt_bufnr, _, actions, _) actions.close(prompt_bufnr) end },
@@ -60,8 +68,9 @@ M.opts = {}
 M.engines = {}
 M.bangs = {}
 M.bangs_array = {}
+M.bangs_name = {}
 
----@param opts table | nil
+---@param opts table?
 M.set = function(opts)
 	opts = opts or {}
 	M.opts = vim.tbl_deep_extend("force", M.defaults, opts)
@@ -90,6 +99,7 @@ M.set_engines = function()
 		assert(type(props.url) == "string", "Assertion Error: Invalid value of url '" .. name .. "', is not a string.")
 		assert(string.find(props.url, "%%s"), "Assertion Error: Invalid url for '" .. name .. "', no '%s' in the link.")
 		M.engines[name] = props.bang
+		M.bangs_name[props.bang] = name
 		M.bangs[props.bang] = props.url
 		table.insert(M.bangs_array, props.bang)
 	end

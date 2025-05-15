@@ -32,7 +32,7 @@ require("embrace").setup({
     search = "<leader>o", -- toggle Surf window
   },
 
-  search_history_limit = 500, -- limit length of search history in cached file
+  history_limit = 500, -- limit length of search and calculator history in cached file
   default_engine = "Google",
 
   -- Engines must be of the form:

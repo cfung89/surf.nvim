@@ -2,6 +2,7 @@ local M = {}
 
 M.data_path = vim.fn.stdpath("data") .. "/surf"
 M.search_history_path = M.data_path .. "/search_history.txt"
+M.calculator_history_path = M.data_path .. "/calculator_history.txt"
 
 vim.fn.mkdir(M.data_path, "p")
 
@@ -39,7 +40,7 @@ end
 
 ---@param path string
 ---@param data string[]
----@param limit integer | nil
+---@param limit integer?
 ---@return boolean
 M.write_text_file = function(path, data, limit)
 	local f = io.open(path, "w")
@@ -76,7 +77,10 @@ M.array_contains = function(array, value)
 	return false
 end
 
-M.string_split = function(str, sep)
+---@param str string
+---@param sep string?
+---@return string[]
+M.split_string = function(str, sep)
 	if sep == nil then
 		sep = "%s"
 	end
