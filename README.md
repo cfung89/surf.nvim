@@ -4,10 +4,14 @@
 
 ## Features
 
-- Search anything on any search engine.
-- Custom bangs (!), similar to DuckDuckGo's at the beginning of queries.
-- Fuzzyfinding through search history.
-- Cross-platform compatibility.
+- Web browsing.
+  - Search anything on any search engine.
+  - Custom bangs (!), similar to DuckDuckGo's at the beginning of queries.
+  - Fuzzyfinding through search history.
+  - Cross-platform compatibility.
+- Calculator.
+  - Simple operations respecting order of operations.
+  - Fuzzyfinding through calculator history.
 
 ## Installation
 
@@ -81,8 +85,10 @@ Type `<leader>o` to open the Surf UI, and search!
 You can use bangs at the beginning of your queries to search on a specific search engine.
 Example: `!br foo bar` to search "foo bar" on Brave Search.
 
+Start the prompt with `=` to use the calculator.
+
 Navigate through the history with `<C-n>` and `<C-p>`, accept with `<C-y>` when in insert mode.
-You can also navigate using normal mode (as in normal Telescope UIs).
+Navigation can also be done in normal mode.
 
 ## Inspirations
 
