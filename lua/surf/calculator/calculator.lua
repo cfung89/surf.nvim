@@ -16,6 +16,7 @@ local precedence = {
 M.parse_equation = function(equation)
 	local trimmed = equation:match("^=*(.*)")
 	trimmed = vim.fn.trim(trimmed)
+	local prev_op = true
 	local out = {}
 	local num = ""
 	for s in string.gmatch(trimmed, ".") do
@@ -26,10 +27,17 @@ M.parse_equation = function(equation)
 				num = num .. "0"
 			end
 			num = num .. s
+			prev_op = false
 		elseif s:match("^[%+%-%*/%^%(%)]$") then
-			if num ~= "" then table.insert(out, num) end
+			if num ~= "" then
+				table.insert(out, num)
+			elseif prev_op and s:match("^[%+%-]$") then
+				num = num .. "-"
+				goto continue
+			end
 			table.insert(out, s)
 			num = ""
+			prev_op = true
 		else
 			return nil
 		end
@@ -68,7 +76,7 @@ M.infix_to_postfix = function(tokens)
 	local output = {}
 
 	for _, n in ipairs(tokens) do
-		if string.match(n, "^%d+%.?%d*$") ~= nil then
+		if string.match(n, "^[%+%-]?%d*%.?%d+$") ~= nil then
 			table.insert(output, n)
 		elseif n == "(" then
 			operator_stack:push(n)
@@ -93,7 +101,7 @@ M.infix_to_postfix = function(tokens)
 end
 
 ---@param postfix string[]?
----@return number?
+---@return string?
 M.postfix_eval = function(postfix)
 	if not postfix then return end
 	local operand_stack = Stack:new()
@@ -109,7 +117,10 @@ M.postfix_eval = function(postfix)
 			operand_stack:push(result)
 		end
 	end
-	return operand_stack:pop()
+	local res = tostring(operand_stack:pop())
+	res = string.gsub(res, "e%+", "%*10%^")
+	res = string.gsub(res, "e%-", "%*10%^-")
+	return res
 end
 
 return M

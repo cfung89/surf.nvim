@@ -40,7 +40,7 @@ M.browse = function(prompt)
 end
 
 ---@param prompt string
----@return number?
+---@return string?
 M.calculate = function(prompt)
 	local tokens = calculator.parse_equation(prompt)
 	if not tokens then return end
@@ -59,7 +59,7 @@ M.parse_bang = function(prompt)
 	if t[1]:sub(1, 1) ~= "!" then
 		return config.get_default_search_link(), prompt
 	end
-	local url = config.bangs[t[1]:sub(2)]
+	local url = config.bangs[t[1]]
 	if not url then
 		return config.get_default_search_link(), prompt
 	end
