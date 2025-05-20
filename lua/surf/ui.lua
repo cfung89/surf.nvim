@@ -58,7 +58,13 @@ M.custom_picker = function(opts, results, action_func, calc_history, calc_func)
 				local selection = action_state.get_selected_entry()
 				local prompt = action_state.get_current_line()
 				if calc_func and vim.startswith(prompt, "=") then
-					local res = calc_func(prompt)
+					local res = ""
+					local mode = vim.api.nvim_get_mode().mode
+					if selection ~= nil and (mode == "n" or selection.index > 1 or (mode == "i" and selection.index == 1)) then
+						res = calc_func(selection[1])
+					elseif mode == "i" then
+						res = calc_func(prompt)
+					end
 					if not res then return end
 					action_state.get_current_picker(prompt_bufnr):set_prompt("= " .. tostring(res))
 					local picker = action_state.get_current_picker(prompt_bufnr)

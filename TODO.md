@@ -7,7 +7,9 @@
   - [X] Bangs
   - [X] User configuration
   - [X] Documentation
-- [ ] Calculator
+- [X] Calculator
+  - [X] Full implementation
+  - [X] UI integration
 - [ ] Bookmarks
   - Menu vs. table UI
   - [ ] Groups
