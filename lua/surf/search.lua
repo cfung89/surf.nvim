@@ -65,7 +65,7 @@ M.parse_bang = function(prompt)
 	end
 	local new_prompt = ""
 	for i = 2, #t do
-		new_prompt = new_prompt .. t[i]
+		new_prompt = new_prompt .. "+" .. t[i]
 	end
 	return url, new_prompt
 end
