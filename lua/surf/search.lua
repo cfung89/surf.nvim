@@ -36,6 +36,7 @@ M.browse = function(prompt)
 	local url, q = M.parse_bang(prompt)
 	local query = q:gsub(" ", "+")
 
+	-- vim.print(string.format(url, query))
 	M.open_url(string.format(url, query))
 end
 
@@ -63,8 +64,8 @@ M.parse_bang = function(prompt)
 	if not url then
 		return config.get_default_search_link(), prompt
 	end
-	local new_prompt = ""
-	for i = 2, #t do
+	local new_prompt = t[2]
+	for i = 3, #t do
 		new_prompt = new_prompt .. "+" .. t[i]
 	end
 	return url, new_prompt
@@ -74,7 +75,7 @@ end
 M.open_url = function(url)
 	local os = config.os
 	if os == "Windows_NT" or os == "Windows" or os == "WSL" then
-		vim.fn.jobstart({ "cmd.exe", "/c", "start", url }, { detach = true })
+		vim.fn.jobstart({ "rundll32.exe", "url.dll,FileProtocolHandler", url }, { detach = true })
 	else
 		vim.ui.open(url)
 	end
